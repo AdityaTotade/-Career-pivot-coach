@@ -1,0 +1,14 @@
+[
+ {"id": "S1", "role": "Business Analyst", "lane": "target", "role_family": "business analyst", "source": "linkedin", "work_model": "hybrid", "tailored": "yes", "responded": true},
+ {"id": "S2", "role": "Business Analyst", "lane": "target", "role_family": "business analyst", "source": "indeed", "work_model": "on-site", "tailored": "yes", "responded": true},
+ {"id": "S3", "role": "Associate BA", "lane": "target", "role_family": "business analyst", "source": "cold email", "work_model": "on-site", "tailored": "yes", "responded": true},
+ {"id": "S4", "role": "Business Analyst", "lane": "target", "role_family": "business analyst", "source": "indeed", "work_model": "on-site", "tailored": "no", "responded": false},
+ {"id": "S5", "role": "Founder's Office", "lane": "stretch", "role_family": "founder's office", "source": "linkedin", "work_model": "on-site", "tailored": "no", "responded": false},
+ {"id": "S6", "role": "Founder's Office Associate", "lane": "stretch", "role_family": "founder's office", "source": "naukri", "work_model": "on-site", "tailored": "no", "responded": false},
+ {"id": "S7", "role": "Chief of Staff", "lane": "stretch", "role_family": "founder's office", "source": "naukri", "work_model": "remote", "tailored": "no", "responded": false},
+ {"id": "S8", "role": "Operations Analyst", "lane": "adjacent", "role_family": "operations", "source": "indeed", "work_model": "on-site", "tailored": "yes", "responded": true},
+ {"id": "S9", "role": "Supply Chain Analyst", "lane": "adjacent", "role_family": "supply chain", "source": "naukri", "work_model": "on-site", "tailored": "no", "responded": false},
+ {"id": "S10", "role": "Zoho Consultant", "lane": "fallback", "role_family": "zoho/crm", "source": "cold email", "work_model": "remote", "tailored": "yes", "responded": true},
+ {"id": "S11", "role": "Zoho Consultant", "lane": "fallback", "role_family": "zoho/crm", "source": "cold email", "work_model": "remote", "tailored": "yes", "responded": false},
+ {"id": "S12", "role": "CRM Analyst", "lane": "fallback", "role_family": "zoho/crm", "source": "linkedin", "work_model": "hybrid", "tailored": "no", "responded": false}
+]

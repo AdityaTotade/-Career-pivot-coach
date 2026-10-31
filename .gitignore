@@ -1,0 +1,5 @@
+__pycache__/
+.env*
+.vercel/
+active/
+data/

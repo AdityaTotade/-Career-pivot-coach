@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Career Pivot Coach</title>
+<meta name="description" content="Compare your experience with real job postings for the role you want, then get a weekly plan, projects and interview practice.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --ink:#0b0b0b; --paper:#ffffff; --paper-2:#fafaf9; --cream:#f5f3ee;
+  --muted:rgba(0,0,0,.68); --line:rgba(0,0,0,.1); --accent:#08a87a; --accent-ink:#067a59; --mint:#d2f5e6;
+  --warn:#7a3b10; --warn-bg:#fdf0e6;
+  --sans:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --pad:clamp(16px, 5vw, 48px); --max:1040px; --ease:cubic-bezier(.2,.7,.2,1);
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } * { transition:none !important; } }
+body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.6 var(--sans); -webkit-font-smoothing:antialiased; }
+a { color:var(--accent-ink); }
+code { font-size:.9em; background:var(--paper-2); padding:1px 5px; border-radius:4px; }
+:focus-visible { outline:3px solid var(--accent); outline-offset:2px; border-radius:4px; }
+.wrap { max-width:var(--max); margin:0 auto; padding:0 var(--pad); }
+
+header.top { position:sticky; top:0; z-index:10; background:rgba(255,255,255,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+header.top .wrap { display:flex; align-items:center; justify-content:space-between; height:56px; }
+.mark { font-weight:700; letter-spacing:-.01em; }
+.mark span { color:var(--accent); }
+
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:0 20px; border-radius:999px;
+  border:1px solid var(--ink); background:var(--ink); color:#fff; font:600 15px var(--sans); cursor:pointer; text-decoration:none; transition:transform .2s var(--ease); }
+.btn:hover { transform:translateY(-1px); }
+.btn.accent { background:var(--accent); border-color:var(--accent); }
+.btn.ghost { background:transparent; color:var(--ink); }
+.btn.small { min-height:36px; padding:0 14px; font-size:14px; }
+.btn[disabled] { opacity:.5; cursor:wait; }
+
+.hero { background:var(--ink); color:#fff; padding:clamp(48px,9vw,96px) 0 clamp(40px,7vw,72px); }
+.kicker { font-size:13px; font-weight:600; letter-spacing:.04em; color:var(--accent); margin:0 0 14px; }
+.hero h1 { font-size:clamp(32px,5.6vw,58px); line-height:1.05; letter-spacing:-.03em; margin:0 0 18px; max-width:17ch; font-weight:700; }
+.hero p.lede { font-size:clamp(17px,2.1vw,20px); color:rgba(255,255,255,.75); max-width:56ch; margin:0 0 28px; }
+.hero .micro { font-size:14px; color:rgba(255,255,255,.6); margin:12px 0 0; }
+.stats { display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid rgba(255,255,255,.15); margin-top:44px; }
+.stats div { padding:18px 8px 0 0; }
+.stats b { display:block; font-size:clamp(22px,3.4vw,34px); letter-spacing:-.02em; }
+.stats span { font-size:13px; color:rgba(255,255,255,.6); }
+
+section.block { padding:clamp(40px,6vw,64px) 0; border-bottom:1px solid var(--line); scroll-margin-top:100px; }
+#start { scroll-margin-top:60px; }
+section.block.cream { background:var(--cream); }
+.num { font-size:13px; font-weight:600; color:var(--accent-ink); margin:0 0 8px; }
+h2 { font-size:clamp(24px,3.4vw,36px); line-height:1.15; letter-spacing:-.02em; margin:0 0 10px; max-width:26ch; }
+.sub { color:var(--muted); margin:0 0 28px; max-width:62ch; }
+.hidden { display:none !important; }
+
+label.f { display:block; font-weight:600; font-size:14px; margin:0 0 6px; }
+.hint { font-weight:400; color:var(--muted); }
+textarea, input, select { width:100%; min-height:44px; font:16px/1.5 var(--sans); color:var(--ink); background:var(--paper); border:1px solid rgba(0,0,0,.2); border-radius:10px; padding:12px 14px; }
+textarea { min-height:150px; resize:vertical; }
+.grid { display:grid; grid-template-columns:2fr 1fr 1fr; gap:14px; margin:18px 0 22px; }
+@media (max-width:700px) { .grid { grid-template-columns:1fr 1fr; } .grid > :first-child { grid-column:1 / -1; } }
+.chips { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 0; }
+.chip { min-height:36px; padding:0 14px; border-radius:999px; border:1px solid var(--line); background:var(--paper); font:500 14px var(--sans); cursor:pointer; color:var(--ink); }
+.chip:hover { border-color:var(--accent); }
+.chip.on { background:var(--ink); color:#fff; border-color:var(--ink); }
+.voice { display:inline-block; background:var(--mint); color:var(--accent-ink); font-size:13px; font-weight:600; padding:4px 12px; border-radius:999px; margin:0 0 10px; }
+.actions { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+
+.summary { display:grid; grid-template-columns:repeat(4,1fr); border-top:2px solid var(--ink); margin:0 0 8px; }
+.summary div { padding:16px 12px 16px 0; border-bottom:1px solid var(--line); }
+.summary b { display:block; font-size:clamp(22px,3vw,30px); letter-spacing:-.02em; }
+.summary span { font-size:14px; color:var(--muted); }
+@media (max-width:700px) { .summary { grid-template-columns:1fr 1fr; } }
+.note { font-size:14px; color:var(--muted); margin:10px 0 24px; }
+.note.warn { background:var(--warn-bg); color:var(--warn); padding:12px 14px; border-radius:10px; }
+
+.rows { list-style:none; margin:0; padding:0; border-top:2px solid var(--ink); }
+.rows > li { display:grid; gap:6px 18px; padding:16px 0; border-bottom:1px solid var(--line); }
+.gap-row { grid-template-columns:minmax(0,1.1fr) minmax(0,1.3fr) 104px; align-items:center; }
+.gap-row > :nth-child(3) { justify-self:end; }
+.gap-row .skill { font-weight:600; }
+.tag { display:inline-block; font-size:12px; font-weight:600; padding:2px 8px; border-radius:999px; margin-left:6px; vertical-align:2px; white-space:nowrap; }
+.tag.sig { background:var(--ink); color:#fff; }
+.tag.have { background:var(--mint); color:var(--accent-ink); margin-left:0; }
+.tag.gap { background:var(--warn-bg); color:var(--warn); margin-left:0; }
+.bar { height:8px; background:var(--paper-2); border:1px solid var(--line); border-radius:999px; overflow:hidden; }
+.bar i { display:block; height:100%; background:var(--accent); }
+.pct { font-size:14px; color:var(--muted); }
+.why { grid-column:1 / -1; font-size:14px; color:var(--muted); }
+.why a { display:inline-block; padding:4px 0; }
+@media (max-width:700px) { .gap-row { grid-template-columns:1fr auto; } .gap-row .meter { grid-column:1 / -1; order:3; } .gap-row .why { order:4; } }
+
+.week { grid-template-columns:64px 1fr auto; align-items:start; }
+.week .n { font-size:28px; font-weight:700; letter-spacing:-.02em; line-height:1; }
+.week .n small { display:block; font-size:12px; font-weight:500; color:var(--muted); letter-spacing:0; margin-top:6px; }
+.week h3 { font-size:17px; margin:0 0 2px; }
+.week ul { margin:6px 0 0; padding-left:18px; color:var(--muted); font-size:15px; }
+.week.done { opacity:.5; } .week.slipped h3 { color:var(--warn); }
+.link { background:none; border:0; padding:8px 4px; font:500 14px var(--sans); color:var(--muted); text-decoration:underline; cursor:pointer; min-height:36px; }
+.week .ctl { display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+@media (max-width:700px) { .week { grid-template-columns:44px 1fr; } .week .ctl { grid-column:2; justify-content:flex-start; } }
+.changes { list-style:none; padding:0; margin:16px 0 0; font-size:14px; color:var(--accent-ink); }
+
+.proj h3 { font-size:18px; margin:0; }
+.proj p { margin:0; color:var(--muted); font-size:15px; }
+
+.q { font-size:clamp(20px,2.6vw,26px); line-height:1.3; letter-spacing:-.01em; font-weight:600; margin:0 0 6px; max-width:40ch; }
+.score { display:flex; align-items:baseline; gap:10px; margin:24px 0 10px; }
+.score b { font-size:56px; letter-spacing:-.03em; line-height:1; }
+.rub { display:grid; grid-template-columns:110px 1fr 34px; gap:8px 12px; align-items:center; font-size:14px; max-width:520px; }
+.feedback { margin:14px 0 0; padding-left:18px; }
+
+.app-form { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:0 0 14px; }
+@media (max-width:700px) { .app-form { grid-template-columns:1fr; } }
+.two { display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:28px; border-top:2px solid var(--ink); padding-top:18px; }
+@media (max-width:700px) { .two { grid-template-columns:1fr; } }
+.two h3 { font-size:16px; margin:0 0 8px; }
+.two ul { margin:0; padding-left:18px; }
+
+.verdict { display:grid; grid-template-columns:auto 1fr; gap:6px 28px; align-items:center; border-top:2px solid var(--ink); padding:22px 0 18px; }
+.verdict .big { font-size:clamp(48px,8vw,72px); font-weight:700; letter-spacing:-.04em; line-height:1; }
+.verdict .big small { font-size:16px; font-weight:600; letter-spacing:0; color:var(--muted); display:block; margin-top:6px; }
+.verdict p { margin:0; font-size:18px; line-height:1.45; max-width:52ch; }
+.verdict .meterbig { grid-column:1 / -1; height:12px; }
+@media (max-width:700px) { .verdict { grid-template-columns:1fr; } }
+.found { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin:12px 0 22px; font-size:14px; color:var(--muted); }
+.found .tag { margin-left:0; }
+.tag.neutral { background:var(--paper-2); color:var(--ink); border:1px solid var(--line); font-weight:500; }
+.more { margin-top:14px; }
+.progress { display:flex; align-items:center; gap:14px; margin:0 0 18px; font-size:15px; font-weight:600; }
+.progress .bar { flex:1; max-width:360px; height:10px; }
+nav.sections { display:flex; gap:4px; overflow-x:auto; border-top:1px solid var(--line); }
+nav.sections a { flex:none; padding:10px 12px; font-size:14px; font-weight:500; color:var(--muted); text-decoration:none; border-bottom:2px solid transparent; }
+nav.sections a.on { color:var(--ink); border-bottom-color:var(--accent); }
+/* Motion: everything eases in; nothing moves for people who ask for reduced motion */
+.reveal { opacity:0; transform:translateY(14px); transition:opacity .6s var(--ease), transform .6s var(--ease); }
+.reveal.in { opacity:1; transform:none; }
+.bar i { transition:width 1s var(--ease); }
+.chip, .btn, .rows > li, .link { transition:background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease); }
+.gap-row:hover { background:var(--paper-2); }
+.btn.busy { pointer-events:none; opacity:.8; }
+.btn.busy::after { content:""; width:14px; height:14px; border:2px solid currentColor; border-right-color:transparent; border-radius:50%; animation:spin .7s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity:1; transform:none; } .btn.busy::after { animation:none; } }
+.verdict { background:var(--mint); border-top:0; border-radius:14px; padding:24px 26px; margin:0 0 18px; }
+.verdict .bar { background:rgba(255,255,255,.7); border-color:rgba(6,122,89,.25); }
+.week .n { display:grid; place-items:center; width:46px; height:46px; border:2px solid var(--ink); border-radius:50%; font-size:18px; }
+.week.done .n { background:var(--accent); border-color:var(--accent); color:#fff; }
+.week .n small { display:none; }
+.score.good b { color:var(--accent-ink); } .score.low b { color:var(--warn); }
+.tag.soft { background:#eef0ff; color:#2d3a8c; margin-left:0; }
+.steps { display:grid; grid-template-columns:repeat(7,1fr); gap:0; margin-top:36px; border-top:1px solid rgba(255,255,255,.15); counter-reset:step; }
+.steps a { display:block; padding:14px 10px 0 0; color:rgba(255,255,255,.62); text-decoration:none; font-size:13px; line-height:1.35; counter-increment:step; }
+.steps a::before { content:"0" counter(step); display:block; font-size:12px; font-weight:700; color:var(--accent); margin-bottom:4px; }
+.steps a b { display:block; color:#fff; font-size:14px; font-weight:600; }
+.steps a:hover b { color:var(--accent); }
+@media (max-width:820px) { .steps { grid-template-columns:repeat(2,1fr); row-gap:6px; } }
+#toast { position:fixed; left:50%; bottom:20px; transform:translate(-50%,120px); background:var(--ink); color:#fff; padding:12px 18px; border-radius:12px; font-size:14px; max-width:calc(100% - 32px); transition:transform .3s var(--ease); z-index:20; }
+#toast.on { transform:translate(-50%,0); }
+footer { padding:40px 0 64px; color:var(--muted); font-size:14px; }
+footer b { color:var(--ink); }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="mark">Career Pivot <span>Coach</span></div>
+  <a class="btn small" id="topBtn" href="#start" onclick="setTimeout(() => $('resume').focus(), 400)">Start</a>
+</div>
+<div class="wrap hidden" id="secnav"><nav class="sections" aria-label="Sections">
+  <a href="#gapCard">Market</a><a href="#planCard">Plan</a><a href="#projCard">Projects</a><a href="#ivCard">Practice</a><a href="#appCard">Applications</a>
+</nav></div></header>
+
+<section class="hero"><div class="wrap">
+  <p class="kicker">For people moving into a new role</p>
+  <h1>See what your next role asks for, and the weeks it takes to get there.</h1>
+  <p class="lede">Paste or speak your experience. The coach compares it with real job postings for the role you want, then builds a weekly plan, portfolio projects and interview practice around your gaps.</p>
+  <a class="btn accent" href="#start" onclick="setTimeout(() => $('resume').focus(), 400)">Start</a>
+  <p class="micro">Free · no sign-up · your answers stay in your browser · speak with Wispr Flow</p>
+  <nav class="steps" aria-label="What the coach does">
+    <a href="#start"><b>Intake</b>résumé + target role</a>
+    <a href="#gapCard" data-need><b>Gap map</b>from real postings</a>
+    <a href="#planCard" data-need><b>Weekly plan</b>one gap a week</a>
+    <a href="#projCard" data-need><b>Projects</b>matched to gaps</a>
+    <a href="#ivCard" data-need><b>Interview</b>rubric-scored</a>
+    <a href="#planCard" data-need><b>Progress</b>re-plans as you go</a>
+    <a href="#appCard" data-need><b>Applications</b>learns what replies</a>
+  </nav>
+  <div class="stats">
+    <div><b id="statJobs">…</b><span>real job postings read</span></div>
+    <div><b id="statRoles">…</b><span>role families mapped</span></div>
+    <div><b>Oct 2026</b><span>Naukri.com, India</span></div>
+  </div>
+</div></section>
+
+<main>
+<section class="block cream" id="start"><div class="wrap">
+  <p class="num">01 · Where you are</p>
+  <h2>Tell me what you've done and where you want to go.</h2>
+  <p class="sub">Plain sentences are fine. Only what you write is used; nothing is added.</p>
+  <label class="f" for="resume">Your experience <span class="hint">(résumé text or a quick summary)</span></label>
+  <div class="voice">🎙 Click the box and hold your Wispr Flow key to speak</div>
+  <textarea id="resume" placeholder="e.g. Operations executive for three years. I wrote warehouse SOPs, built weekly Excel reports with pivots and coordinated with sales and finance…"></textarea>
+  <div class="grid">
+    <div>
+      <label class="f" for="role">Role you want</label>
+      <input id="role" list="roleList" placeholder="e.g. Business Analyst" autocomplete="off">
+      <datalist id="roleList"></datalist>
+    </div>
+    <div><label class="f" for="hours">Hours a week</label><input id="hours" type="number" min="2" max="40" value="8"></div>
+    <div><label class="f" for="weeks">Weeks</label><input id="weeks" type="number" min="3" max="16" value="8"></div>
+  </div>
+  <p class="pct" style="margin:-10px 0 18px">How much time you can give. 8 hours a week for 8 weeks is a realistic start; change it if you like.</p>
+  <p class="pct" style="margin:-8px 0 0">Roles with real data today (postings read):</p>
+  <div class="chips" id="roleChips"></div>
+  <div class="actions" style="margin-top:22px">
+    <button class="btn" id="go" onclick="intake()">Build my plan</button>
+    <button class="btn ghost" onclick="loadSample()">Fill in a sample person</button>
+    <button class="btn ghost hidden" id="reset" onclick="startOver()">Start over</button>
+  </div>
+  <p class="note hidden" id="welcome"></p>
+</div></section>
+
+<section class="block hidden" id="nodata"><div class="wrap reveal">
+  <p class="num">02 · The market</p>
+  <h2 id="nodataTitle"></h2>
+  <p class="sub">I'd rather say so than guess. Pick a role I have real postings for, or ask Claude to fetch this one with <code>/pivot-coach</code>.</p>
+  <div class="chips" id="nodataChips"></div>
+</div></section>
+
+<section class="block hidden" id="gapCard"><div class="wrap reveal">
+  <p class="num">02 · The market</p>
+  <h2 id="gapTitle"></h2>
+  <p class="sub" id="gapSub"></p>
+  <div class="verdict" id="verdict"></div>
+  <div class="summary" id="summary" style="grid-template-columns:repeat(3,1fr)"></div>
+  <div class="found" id="found"></div>
+  <p class="note" id="familyNote"></p>
+  <ul class="rows" id="gapRows"></ul>
+  <button class="btn ghost small more hidden" id="moreBtn" onclick="showAll = !showAll; render()"></button>
+</div></section>
+
+<section class="block cream hidden" id="planCard"><div class="wrap reveal">
+  <p class="num">03 · The plan</p>
+  <h2 id="planTitle"></h2>
+  <p class="sub">One main gap a week, signature skills first. Mark each week when it ends: a slipped week repeats, and a weak interview answer adds a review week.</p>
+  <div class="progress" id="progress"></div>
+  <ul class="rows" id="planRows"></ul>
+  <ul class="changes" id="changes"></ul>
+</div></section>
+
+<section class="block hidden" id="projCard"><div class="wrap reveal">
+  <p class="num">04 · Proof</p>
+  <h2>Projects that close the most gaps.</h2>
+  <p class="sub">Each covers different gaps, weighted by how often employers ask for them.</p>
+  <ul class="rows" id="projects"></ul>
+</div></section>
+
+<section class="block cream hidden" id="ivCard"><div class="wrap reveal">
+  <p class="num">05 · Practice</p>
+  <h2>Answer one interview question for this week's skill.</h2>
+  <p class="q" id="question"></p>
+  <p class="sub" id="qMeta"></p>
+  <label class="f" for="answer">Your answer <span class="hint">(speak it with Wispr Flow, or type)</span></label>
+  <textarea id="answer" placeholder="When… I had to… I… As a result…" oninput="$('wc').textContent = (this.value.trim().split(/\s+/).filter(Boolean).length) + ' words (aim for 80–300)'"></textarea>
+  <p class="pct" id="wc" style="margin:6px 0 0">0 words (aim for 80–300)</p>
+  <div class="actions" style="margin-top:14px">
+    <button class="btn" onclick="score()">Score my answer</button>
+    <button class="btn ghost" onclick="ask()">Ask again</button>
+  </div>
+  <div id="result" aria-live="polite"></div>
+</div></section>
+
+<section class="block hidden" id="appCard"><div class="wrap reveal">
+  <p class="num">06 · Applications</p>
+  <h2>Which kinds of roles actually reply to you.</h2>
+  <p class="sub" id="appSub"></p>
+  <div class="app-form">
+    <div><label class="f" for="aRole">Role applied for</label><input id="aRole" placeholder="e.g. Business Analyst"></div>
+    <div><label class="f" for="aSource">Where</label><select id="aSource"><option>linkedin</option><option>indeed</option><option>naukri</option><option>cold email</option><option>referral</option></select></div>
+    <div><label class="f" for="aResp">Reply?</label><select id="aResp"><option value="false">No reply yet</option><option value="true">Got a reply (any)</option></select></div>
+    <div><label class="f" for="aLane">How close to your target?</label><select id="aLane"><option value="target">Exactly my target role</option><option value="adjacent">A nearby role</option><option value="stretch">A stretch role</option><option value="fallback">My current field</option></select></div>
+    <div><label class="f" for="aWork">Work model</label><select id="aWork"><option>on-site</option><option>hybrid</option><option>remote</option></select></div>
+    <div><label class="f" for="aTail">Résumé</label><select id="aTail"><option value="yes">Tailored</option><option value="no">Generic</option></select></div>
+  </div>
+  <button class="btn" onclick="apps(true)">Log this application</button>
+  <p class="num" id="advHead" style="margin:28px 0 0"></p>
+  <div class="two" id="advBox" style="margin-top:8px">
+    <div><h3>Do more of</h3><ul id="doMore"></ul></div>
+    <div><h3>Do less of</h3><ul id="doLess"></ul></div>
+  </div>
+</div></section>
+</main>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<footer><div class="wrap">
+  <p><b>AI interprets. Rules validate. You approve.</b> Every percentage comes from counted job postings you can open, not from a model's guess.</p>
+  <p id="srcNote"></p>
+</div></footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pct = x => Math.round(x * 100) + "%";
+const ACRO = {ui: "UI", ux: "UX", hr: "HR", devops: "DevOps", qa: "QA", ai: "AI", seo: "SEO"};
+const title = s => String(s).toLowerCase().replace(/\bui ux\b/g, "ui/ux").split(/(\s+|\/)/)
+  .map(w => ACRO[w] || w.replace(/^\w/, c => c.toUpperCase())).join("");
+let S = {}, current = null, ROLES = {}, showAll = false;
+
+const KEY = "pivot-coach-state";
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+
+async function api(action, body = {}) {
+  let r, j;
+  try {
+    r = await fetch("/api/coach", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({...body, action, state: S})});
+    j = await r.json();
+  } catch (e) { toast("Couldn't reach the coach. Check your connection and try again."); throw e; }
+  if (!r.ok) { toast(j.error || "Something went wrong."); throw new Error(j.error); }
+  S = j.state; save();
+  return j.result;
+}
+
+function toast(msg) {
+  const t = $("toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove("on"), 4000);
+}
+
+function chips(el, onPick) {
+  el.innerHTML = Object.entries(ROLES).sort((a, b) => b[1] - a[1])
+    .map(([r, n]) => `<button class="chip" data-r="${esc(r)}">${esc(title(r))} · ${n}</button>`).join("");
+  el.querySelectorAll(".chip").forEach(b => b.onclick = () => onPick(title(b.dataset.r)));
+}
+
+async function boot() {
+  S = load();
+  const r = await api("roles");
+  ROLES = r.roles;
+  $("statJobs").textContent = r.jobs;
+  $("statRoles").textContent = Object.keys(ROLES).length;
+  $("roleList").innerHTML = Object.keys(ROLES).map(x => `<option value="${esc(title(x))}">`).join("");
+  chips($("roleChips"), role => {
+    $("role").value = role; markChip();
+    if (S.profile && $("resume").value.trim()) intake(); else $("resume").value.trim() ? $("go").focus() : $("resume").focus();
+  });
+  $("role").addEventListener("input", markChip);
+  $("srcNote").textContent = `Data: ${r.jobs} job postings with employer-listed skills from Naukri.com search pages, read 31 Oct 2026` + (r.career_os ? ", plus postings from my own job search." : ".");
+  if (S.profile) {
+    $("role").value = title(S.profile.target_role); markChip();
+    $("welcome").textContent = `Welcome back. Your saved plan for ${title(S.profile.target_role)} is below. Build a new one any time, or start over.`;
+    show("welcome", true);
+    render();
+  }
+}
+
+function markChip() {
+  const v = $("role").value.trim().toLowerCase();
+  document.querySelectorAll("#roleChips .chip").forEach(c => c.classList.toggle("on", title(c.dataset.r).toLowerCase() === v));
+}
+
+function startOver() {
+  S = {}; try { localStorage.removeItem(KEY); } catch (e) {}
+  ["nodata", "gapCard", "planCard", "projCard", "ivCard", "appCard", "welcome", "reset", "secnav"].forEach(id => show(id, false));
+  $("topBtn").textContent = "Start"; markChip();
+  $("resume").value = ""; $("role").value = ""; $("resume").focus();
+  toast("Cleared. Nothing is saved anywhere else.");
+}
+
+const UP = {ui: "UI", ux: "UX", sql: "SQL", crm: "CRM", erp: "ERP", sap: "SAP", api: "API", etl: "ETL", seo: "SEO", hr: "HR",
+  "ci/cd": "CI/CD", "fp&a": "FP&A", "brd": "BRD", "frd": "FRD", "pmo": "PMO", "ai": "AI", "llm": "LLM", "html": "HTML", "css": "CSS",
+  "c#": "C#", ".net": ".NET", "oops": "OOP", "mongodb": "MongoDB", "javascript": "JavaScript", "node.js": "Node.js", "figma": "Figma",
+  "java": "Java", "python": "Python", "django": "Django", "flask": "Flask", "fastapi": "FastAPI", "docker": "Docker", "kubernetes": "Kubernetes",
+  "jenkins": "Jenkins", "git": "Git", "react": "React", "angular": "Angular", "excel": "Excel", "zoho": "Zoho", "adobe": "Adobe",
+  "xd": "XD", "spring": "Spring", "hibernate": "Hibernate", "maven": "Maven", "canva": "Canva", "corel": "Corel", "google": "Google", "unix": "Unix", "scrum": "Scrum", "kpis": "KPIs", "shell": "Shell", "sap": "SAP"};
+const skillName = s => UP[s.toLowerCase()] || (s === "capstone" ? "Capstone" : s.split(/(\s+|\/)/)
+  .map((w, i) => UP[w.toLowerCase()] || (i === 0 ? w.replace(/^\w/, c => c.toUpperCase()) : w)).join(""));
+
+function loadSample() {
+  $("resume").value = "Operations executive at a regional logistics firm, 2023 to 2026. I wrote shipment-handling SOPs for two warehouses and trained 12 staff on them. I built weekly MIS reports in Excel with pivots for the operations head. I coordinated with sales and finance to fix delayed dispatches, and mapped the dispatch workflow. I used ChatGPT to draft customer emails.";
+  $("role").value = "Business Analyst";
+}
+
+async function intake() {
+  if (!$("resume").value.trim()) { toast("Add a few lines about your experience first."); return $("resume").focus(); }
+  if (!$("role").value.trim()) { toast("Pick or type the role you want."); return $("role").focus(); }
+  $("go").disabled = true; $("go").classList.add("busy"); $("go").firstChild.textContent = "Building… ";
+  try {
+    await api("intake", {resume: $("resume").value, target_role: $("role").value, hours: +$("hours").value, weeks: +$("weeks").value});
+    show("welcome", false);
+    render();
+    toast(S.gap_map.ok ? `Plan built for ${title(S.profile.target_role)}. Scroll down to see it.` : "No real postings for that role yet. See below.");
+    (S.gap_map.ok ? $("gapCard") : $("nodata")).scrollIntoView({behavior: "smooth"});
+  } finally { $("go").disabled = false; $("go").classList.remove("busy"); $("go").firstChild.textContent = "Build my plan"; }
+}
+
+function show(id, on) {
+  $(id).classList.toggle("hidden", !on);
+  const inner = $(id).querySelector(".reveal");
+  if (inner) requestAnimationFrame(() => requestAnimationFrame(() => inner.classList.toggle("in", on)));
+}
+
+function countUp(el, to) {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return el.firstChild.textContent = to + "%";
+  const t0 = performance.now(), dur = 900;
+  (function tick(t) { const k = Math.min(1, (t - t0) / dur); el.firstChild.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))) + "%"; if (k < 1) requestAnimationFrame(tick); })(t0);
+}
+
+// Hero steps only jump to results once a plan exists; before that they lead to the form
+document.querySelectorAll(".steps a[data-need]").forEach(a => a.addEventListener("click", e => {
+  if (!S.profile || !S.gap_map?.ok) { e.preventDefault(); location.hash = "start"; setTimeout(() => $("resume").focus(), 400); toast("Build your plan first, then each step opens here."); }
+}));
+
+function render() {
+  const g = S.gap_map, role = title(S.profile.target_role);
+  show("reset", true); show("secnav", g.ok); $("topBtn").textContent = "Edit my inputs"; markChip();
+  show("nodata", !g.ok);
+  ["gapCard", "planCard", "projCard", "ivCard", "appCard"].forEach(id => show(id, g.ok));
+  if (!g.ok) {
+    $("nodataTitle").textContent = `I don't have enough real postings for “${role}” yet.`;
+    chips($("nodataChips"), r => { $("role").value = r; intake(); });
+    return;
+  }
+  const gaps = g.rows.filter(r => !r.have), sig = gaps.filter(r => r.signature);
+  $("gapTitle").textContent = `What ${role} postings ask for, and what you already show.`;
+  $("gapSub").textContent = `Skills listed by employers in ${g.jd_total} real postings, most-asked first. “Signature” means the skill is at least twice as common in this role as across all roles.`;
+  const have = g.rows.filter(r => r.have), first = gaps.slice(0, 3).map(r => skillName(r.skill));
+  $("verdict").innerHTML = `<div class="big" id="bigNum">0%<small>match</small></div>
+    <p>You already show <b>${have.length} of ${g.rows.length}</b> skills ${esc(role)} postings ask for${have.length ? "" : " (based on what you wrote)"}.
+    ${first.length ? `Close these first: <b>${first.map(esc).join(", ")}</b>.` : "No gaps left: go apply."}</p>
+    <div class="bar meterbig"><i style="width:0" data-w="${Math.max(2, g.coverage * 100)}"></i></div>`;
+  countUp($("bigNum"), Math.round(g.coverage * 100));
+  requestAnimationFrame(() => requestAnimationFrame(() => document.querySelectorAll("[data-w]").forEach(i => i.style.width = i.dataset.w + "%")));
+  $("summary").innerHTML = `
+    <div><b>${gaps.length}</b><span>gaps to close (${sig.length} define this role)</span></div>
+    <div><b>${g.jd_total}</b><span>real postings compared</span></div>
+    <div><b>${pct(g.entry_share)}</b><span>open to 0–1 years' experience</span></div>`;
+  const found = S.profile.skills;
+  $("found").innerHTML = "<span>What I found in your text:</span> " + (found.length
+    ? found.map(x => `<span class="tag ${g.rows.some(r => r.have && r.skill === x) ? "have" : "neutral"}">${esc(skillName(x))}</span>`).join("")
+    : "<span>no named tools or skills yet. Add the tools you've used (e.g. Excel, Tally, SQL, Zendesk) and build again.</span>");
+  const thin = g.coverage < 0.1;
+  $("familyNote").className = "note" + (g.exact && !thin ? "" : " warn");
+  $("familyNote").textContent = (g.exact ? `Based on ${g.jd_total} ${title(g.families.join(", "))} postings. Green tags above count toward your match; grey ones are real skills this role rarely lists.`
+    : `No postings titled “${role}” yet, so this uses the closest family I have: ${title(g.families.join(", "))}. Treat it as a guide.`)
+    + (thin ? " Your match looks low: add the tools and tasks you've actually used and build again." : "");
+  const LIMIT = 8, rows = showAll ? g.rows : g.rows.slice(0, LIMIT);
+  show("moreBtn", g.rows.length > LIMIT);
+  $("moreBtn").textContent = showAll ? "Show fewer" : `Show all ${g.rows.length} skills`;
+  $("gapRows").innerHTML = rows.map(r => `<li class="gap-row">
+      <div class="skill">${esc(skillName(r.skill))}${r.signature ? ' <span class="tag sig">Signature</span>' : ""}</div>
+      <div class="meter"><div class="bar"><i style="width:${r.share * 100}%"></i></div><span class="pct">${pct(r.share)} of postings · ${r.jd_count}</span></div>
+      <div><span class="tag ${r.have ? "have" : r.soft ? "soft" : "gap"}">${r.have ? "You have it" : r.soft ? "Show in interviews" : "Gap"}</span></div>
+      <div class="why">${r.have ? (r.evidence.startsWith("Implied by") ? esc(r.evidence.replace(/your (.+) work/, (m, k) => "your " + skillName(k) + " work")) + "." : "From your text: “" + esc(r.evidence) + "”")
+        : r.soft ? "A soft skill: prove it with a story in your interview answers, not a learning week. Asked by " + r.sources.map(s => esc(s.company)).join(", ")
+        : "Asked by " + r.sources.map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.company)}</a>`).join(", ")
+          + ((r.sources[0]?.companies || 0) > r.sources.length ? ` and ${r.sources[0].companies - r.sources.length} more companies` : "")}</div>
+    </li>`).join("");
+
+  $("planTitle").textContent = `Your ${S.plan.length}-week plan at ${S.profile.hours_per_week} hours a week.`;
+  const doneN = S.plan.filter(w => w.status === "done").length;
+  $("progress").innerHTML = `<span>${doneN} of ${S.plan.length} weeks done</span><div class="bar"><i style="width:${doneN / S.plan.length * 100}%"></i></div>`;
+  const nice = (txt, w) => txt.replace(w.skill, skillName(w.skill)).replace(S.profile.target_role, role);
+  $("planRows").innerHTML = S.plan.map(w => `<li class="week ${w.status}">
+      <div class="n">${w.week}<small>${esc(w.mode)}</small></div>
+      <div><h3>${esc(skillName(w.skill))} <span class="tag neutral">${esc(w.mode)}</span></h3><div class="pct">${esc(w.goal.replace(w.skill, skillName(w.skill)).replace(S.profile.target_role, role))}</div>
+        <ul>${w.tasks.map(t => `<li>${esc(nice(t, w))}</li>`).join("")}</ul></div>
+      <div class="ctl">${w.status === "todo"
+        ? `<button class="btn small ghost" onclick="checkin(${w.week},true)">Mark done</button><button class="link" onclick="checkin(${w.week},false)">I slipped</button>`
+        : `<span class="tag ${w.status === "done" ? "have" : "gap"}">${esc(w.status)}</span>`}</div>
+    </li>`).join("");
+  $("changes").innerHTML = (S.log || []).flatMap(l => l.changes).map(c => `<li>↻ ${esc(c)}</li>`).join("");
+
+  $("projects").innerHTML = S.projects.map((p, i) => `<li class="proj"><h3>${i + 1}. ${esc(p.title)}</h3>
+      <p>Closes: ${p.closes_gaps.map(x => esc(skillName(x))).join(", ")}</p><p>You ship: ${esc(p.deliverable)}</p></li>`).join("")
+      || "<li>No gaps left to close. Go apply.</li>";
+  ask(); apps(false);
+}
+
+async function checkin(week, done) {
+  const w = S.plan.find(x => x.week === week);
+  await api("checkin", {week, skill: w.skill, done});
+  const changes = S.log[S.log.length - 1].changes;
+  render();
+  toast(changes.length ? changes.join(" ") : `Week ${week} marked done. Nice.`);
+}
+
+async function ask() {
+  current = await api("question");
+  $("question").textContent = current.question;
+  $("qMeta").textContent = `Week ${current.week} · ${skillName(current.skill)}. Scored on structure, specifics, relevance, ownership and length.`;
+  $("answer").value = ""; $("result").innerHTML = "";
+}
+
+async function score() {
+  if (!$("answer").value.trim()) { toast("Say or type an answer first."); return $("answer").focus(); }
+  if (!current) { const kept = $("answer").value; await ask(); $("answer").value = kept; }
+  const r = await api("answer", {answer: $("answer").value, skill: current.skill});
+  $("result").innerHTML = `<div class="score ${r.score >= 60 ? "good" : "low"}"><b>${r.score}</b><span class="pct">out of 100</span></div>
+    <div class="rub">${Object.entries(r.parts).map(([k, v]) => `<span title="${esc(current.rubric[k])}">${k}</span><div class="bar"><i style="width:${v * 20}%"></i></div><span>${v}/5</span>`).join("")}</div>
+    <p class="pct">What each part checks: ${Object.entries(current.rubric).map(([k, d]) => `<b>${k}</b>: ${esc(d)}`).join(" · ")}</p>
+    ${r.feedback.length ? `<h3 style="font-size:16px;margin:14px 0 0">How to raise it</h3><ul class="feedback">${r.feedback.map(f => `<li>${esc(f)}</li>`).join("")}</ul>` : "<p>Strong answer. Keep it this tight.</p>"}
+    <p class="pct">When this week ends, mark it Done in the plan. If your last score for this skill is under 60, a review week is added.</p>`;
+  $("result").scrollIntoView({behavior: "smooth", block: "start"});
+}
+
+async function apps(add) {
+  const body = add ? {add: {role: $("aRole").value || "untitled", source: $("aSource").value, responded: $("aResp").value === "true",
+    lane: $("aLane").value, work_model: $("aWork").value, tailored: $("aTail").value}} : {};
+  const r = await api("apps", body);
+  if (add) { toast(`Logged: ${body.add.role}.`); $("aRole").value = ""; }
+  const li = xs => xs.length ? xs.map(x => `<li>${esc(x)}</li>`).join("") : "<li class='pct'>Not enough data yet (3+ applications per group).</li>";
+  $("appSub").textContent = r.sample
+    ? `You've logged ${r.mine} of 3. Once you log 3, this learns from your own applications. Until then, the lists below are an EXAMPLE from a made-up job seeker, not you.`
+    : `${r.model.n} of your applications · ${pct(r.model.overall)} got a reply. Stored only in this browser.`;
+  $("advHead").textContent = r.sample ? "Example only: what this looks like with real data" : "What your applications say";
+  $("doMore").innerHTML = li(r.advice.do_more);
+  $("doLess").innerHTML = li(r.advice.do_less);
+  $("advBox").style.opacity = r.sample ? .55 : 1;
+}
+
+// Underline the section you're reading in the sticky nav
+const navObs = new IntersectionObserver(entries => entries.forEach(e => {
+  if (e.isIntersecting) document.querySelectorAll("nav.sections a").forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+}), {rootMargin: "-45% 0px -50% 0px"});
+["gapCard", "planCard", "projCard", "ivCard", "appCard"].forEach(id => navObs.observe($(id)));
+
+boot();
+</script>
+</body>
+</html>
