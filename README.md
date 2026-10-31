@@ -1,6 +1,6 @@
 # Career Pivot Coach
 
-**Live:** https://career-pivot-coach.vercel.app · **Team Gorkha** (Aditya Avinash Totade, Devang Thapa) · Agentic AI Hackathon, The Product Space, Oct 2026
+**Live:** https://career-pivot-coach.vercel.app · **Team Gorkha** (Aditya Avinash Totade, Devank Thapa) · Agentic AI Hackathon, The Product Space, Oct 2026
 
 Paste or **speak (Wispr Flow)** your experience and the role you want. The coach compares it with **336 real job postings across 22 role families**, shows exactly which skills you're missing, and turns them into a week-by-week plan, portfolio projects, rubric-scored mock interviews and an application tracker that learns which roles reply.
 
@@ -45,6 +45,8 @@ python tools/build_deploy.py  # clean Vercel package in active/deploy
 ## Quality
 
 Automated tests (incl. malformed / tampered requests and every role), an 81-click live census, three no-context user reviews, a UI/UX designer review and a backend review; every finding fixed. Full report: [docs/Career_Pivot_Coach_Report.pdf](docs/Career_Pivot_Coach_Report.pdf). Demo script: [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
+
+**Built by voice:** the team dictated the build with Wispr Flow (110 words per minute, 4,336 words dictated, 911 fixes by Flow). [Screenshot](docs/screenshots/6-wispr-flow-insights.png).
 
 ## Honest limits
 
