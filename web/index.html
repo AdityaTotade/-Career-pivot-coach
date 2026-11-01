@@ -190,7 +190,7 @@ footer b { color:var(--ink); }
   <div class="stats">
     <div><b id="statJobs">…</b><span>real job postings read</span></div>
     <div><b id="statRoles">…</b><span>role families mapped</span></div>
-    <div><b>Oct 2026</b><span>Naukri.com, India</span></div>
+    <div><b id="statUpdated">…</b><span id="statFresh">Naukri.com, India</span></div>
   </div>
 </div></section>
 
@@ -340,13 +340,18 @@ async function boot() {
   ROLES = r.roles;
   $("statJobs").textContent = r.jobs;
   $("statRoles").textContent = Object.keys(ROLES).length;
+  if (r.updated) {
+    const d = new Date(r.updated + "T00:00:00"), today = new Date().toDateString() === d.toDateString();
+    $("statUpdated").textContent = today ? "Today" : d.toLocaleDateString("en-IN", {day: "numeric", month: "short"});
+    $("statFresh").textContent = `updated from Naukri.com${r.new_today ? ` · ${r.new_today} new postings` : ""}`;
+  }
   $("roleList").innerHTML = Object.keys(ROLES).map(x => `<option value="${esc(title(x))}">`).join("");
   chips($("roleChips"), role => {
     $("role").value = role; markChip();
     if (S.profile && $("resume").value.trim()) intake(); else $("resume").value.trim() ? $("go").focus() : $("resume").focus();
   });
   $("role").addEventListener("input", markChip);
-  $("srcNote").textContent = `Data: ${r.jobs} job postings with employer-listed skills from Naukri.com search pages, read 31 Oct 2026` + (r.career_os ? ", plus postings from my own job search." : ".");
+  $("srcNote").textContent = `Data: ${r.jobs} job postings with employer-listed skills from Naukri.com search pages, refreshed daily (last update ${r.updated || "31 Oct 2026"})` + (r.career_os ? ", plus postings from my own job search." : ".");
   if (S.profile) {
     $("role").value = title(S.profile.target_role); markChip();
     $("welcome").textContent = `Welcome back. Your saved plan for ${title(S.profile.target_role)} is below. Build a new one any time, or start over.`;

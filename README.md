@@ -2,7 +2,7 @@
 
 **Live:** https://career-pivot-coach.vercel.app · **Team Gorkha** (Aditya Avinash Totade, Devank Thapa) · Agentic AI Hackathon, The Product Space, Oct 2026
 
-Paste or **speak (Wispr Flow)** your experience and the role you want. The coach compares it with **336 real job postings across 22 role families**, shows exactly which skills you're missing, and turns them into a week-by-week plan, portfolio projects, rubric-scored mock interviews and an application tracker that learns which roles reply.
+Paste or **speak (Wispr Flow)** your experience and the role you want. The coach compares it with **real job postings across 22 role families, refreshed daily**, shows exactly which skills you're missing, and turns them into a week-by-week plan, portfolio projects, rubric-scored mock interviews and an application tracker that learns which roles reply.
 
 > **AI interprets. Rules validate. You approve.** Every percentage on the page is counted from real postings you can open, not guessed by a model.
 
@@ -50,4 +50,4 @@ Automated tests (incl. malformed / tampered requests and every role), an 81-clic
 
 ## Honest limits
 
-22 roles with 9–20 postings each (a strong sample, not the whole market). Skill matching credits only tools named in your text. Job postings belong to their publishers; the corpus stores skill tags and links only.
+22 roles with 9–20 postings each (a strong sample, not the whole market), refreshed 4 roles a day by a GitHub Action (`tools/refresh_corpus.py`, ~20 Firecrawl credits/day). Skill matching credits only tools named in your text. Job postings belong to their publishers; the corpus stores skill tags and links only.

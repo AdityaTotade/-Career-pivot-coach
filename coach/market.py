@@ -10,6 +10,7 @@
 import json
 import re
 from collections import Counter
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -213,19 +214,34 @@ class Market:
         self.roles = Counter(j["q"] for j in self.jobs)
 
     @classmethod
-    def load(cls, folder=CORPUS_DIR, extra_csv=None):
-        jobs = []
+    def load(cls, folder=CORPUS_DIR, extra_csv=None, max_age_days=30):
+        """Newest copy of each posting wins; per role, postings more than max_age_days older than that
+        role's latest refresh are dropped, so daily refreshes replace old data without emptying a role."""
+        by_url = {}
         for f in sorted(Path(folder).glob("*.jsonl")):
+            file_day = (re.search(r"\d{4}-\d{2}-\d{2}", f.name) or [""])[0]
             for line in f.read_text(encoding="utf-8").splitlines():
                 if line.strip():
-                    jobs.append(json.loads(line))
+                    j = json.loads(line)
+                    j.setdefault("d", file_day)
+                    if j["u"] not in by_url or j["d"] >= by_url[j["u"]]["d"]:
+                        by_url[j["u"]] = j
+        latest = {}
+        for j in by_url.values():
+            latest[j["q"]] = max(latest.get(j["q"], ""), j["d"])
+        jobs = [j for j in by_url.values() if _days_between(j["d"], latest[j["q"]]) <= max_age_days]
+        manifest = Path(folder) / "manifest.json"
         if extra_csv and Path(extra_csv).exists():  # career-OS JDs: free-text key needs, skills read from text
             import csv
             with open(extra_csv, newline="", encoding="utf-8-sig") as fh:
                 for r in csv.DictReader(fh):
                     jobs.append({"q": r["role"].lower(), "t": r["role"], "c": r["company"], "e": "",
                                  "l": "", "u": r["source_url"], "s": list(resume_skills(r["jd_key_needs"], prose=False))})
-        return cls(jobs)
+        m = cls(jobs)
+        info = json.loads(manifest.read_text(encoding="utf-8")) if manifest.exists() else {}
+        m.updated = info.get("updated") or max((j.get("d", "") for j in jobs), default="")
+        m.new_today = info.get("new_today", 0) if info.get("updated") == m.updated else 0
+        return m
 
     @staticmethod
     def _family_score(target_role, family):
@@ -265,6 +281,14 @@ class Market:
         entry = sum(1 for j in jobs if min_years(j.get("e", "")) <= 1)
         return {"ok": True, "jd_total": len(jobs), "rows": rows, "entry_share": round(entry / len(jobs), 2),
                 "families": families, "exact": exact}
+
+
+def _days_between(a, b):
+    """Days from date string a to b (YYYY-MM-DD); unknown dates count as fresh."""
+    try:
+        return (date.fromisoformat(b) - date.fromisoformat(a)).days
+    except ValueError:
+        return 0
 
 
 def _distinct_sources(jobs, k=3):

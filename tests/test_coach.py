@@ -165,10 +165,11 @@ class WholeMarketTest(unittest.TestCase):
             tops[role] = tuple(r["skill"] for r in g["rows"][:3])
         self.assertEqual(len(set(tops.values())), len(tops), "two roles share the same top-3 skills")
 
-    def test_every_planned_skill_has_a_specific_hint(self):
-        missing = {w["skill"] for role in MKT.roles for w in core.build_plan(*plan_for(role))
-                   if w["skill"] not in core.GENERAL and w["skill"] not in core.HINTS}
-        self.assertEqual(missing, set())
+    def test_planned_skills_mostly_have_a_specific_hint(self):
+        # Daily refreshes bring new tags; the app falls back to a generic hint, but 90%+ should be specific
+        planned = {w["skill"] for role in MKT.roles for w in core.build_plan(*plan_for(role))} - core.GENERAL
+        missing = planned - set(core.HINTS)
+        self.assertLessEqual(len(missing), len(planned) // 10, sorted(missing))
 
 
 class RobustnessTest(unittest.TestCase):
@@ -219,6 +220,46 @@ class RobustnessTest(unittest.TestCase):
     def test_context_words_are_not_skills(self):
         p = core.intake("I coordinated with sales and finance teams across two warehouses.", "Business Analyst")
         self.assertFalse({"sales", "finance / accounting", "etl / data engineering"} & set(p["skills"]))
+
+
+class RefreshTest(unittest.TestCase):
+    def setUp(self):
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent.parent / "tools"))
+        import refresh_corpus
+        self.r = refresh_corpus
+
+    def test_rotation_covers_every_role_within_six_days(self):
+        import datetime as dt
+        start = dt.date(2026, 11, 1)
+        seen = {role for i in range(6) for role in self.r.todays_batch(start + dt.timedelta(days=i))}
+        self.assertEqual(seen, set(self.r.ROLES))
+        self.assertEqual(set(self.r.ROLES), set(MKT.roles))  # every role on the site gets refreshed
+
+    def test_only_real_job_links_with_skills_are_kept(self):
+        import datetime as dt
+        rows = self.r.to_rows("data analyst", [
+            {"title": "A", "url": "https://www.naukri.com/job-listings-a-1", "skills": ["SQL"]},
+            {"title": "B", "url": "#", "skills": ["SQL"]},
+            {"title": "C", "url": "https://www.naukri.com/job-listings-c-2", "skills": []}], dt.date(2026, 11, 1))
+        self.assertEqual([x["t"] for x in rows], ["A"])
+        self.assertEqual(rows[0]["d"], "2026-11-01")
+
+    def test_newest_copy_wins_and_old_postings_expire(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d)
+            row = lambda u, day, skills: json.dumps({"q": "data analyst", "t": "x", "c": "y", "e": "", "u": u, "s": skills, "d": day})
+            NL = chr(10)
+            (p / "naukri_2026-09-01_a.jsonl").write_text(row("u-old", "2026-09-01", ["SQL", "Excel"]) + NL, encoding="utf-8")
+            (p / "naukri_2026-10-31_a.jsonl").write_text(
+                row("u1", "2026-10-31", ["SQL", "Excel"]) + NL + row("u2", "2026-10-31", ["SQL", "Excel"]) + NL, encoding="utf-8")
+            (p / "naukri_2026-11-01_a.jsonl").write_text(row("u1", "2026-11-01", ["SQL", "Python"]) + NL, encoding="utf-8")
+            m = market.Market.load(folder=p)
+            urls = {j["u"]: j for j in m.jobs}
+            self.assertNotIn("u-old", urls)                      # 61 days older than the newest refresh
+            self.assertEqual(urls["u1"]["d"], "2026-11-01")      # newest copy kept
+            self.assertEqual(len(m.jobs), 2)                     # no duplicates
+            self.assertEqual(m.updated, "2026-11-01")
 
 
 class ServerTest(unittest.TestCase):

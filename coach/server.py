@@ -51,7 +51,8 @@ def act(action, body):
     s = _clean_state(body.get("state"))
     result = None
     if action == "roles":
-        result = {"roles": dict(MARKET.roles), "jobs": len(MARKET.jobs), "career_os": REAL_JDS.exists()}
+        result = {"roles": dict(MARKET.roles), "jobs": len(MARKET.jobs), "career_os": REAL_JDS.exists(),
+                  "updated": MARKET.updated, "new_today": MARKET.new_today}
     elif action == "intake":
         resume, role = str(body.get("resume", ""))[:20000], str(body.get("target_role", ""))[:100]
         if not resume.strip() or not role.strip():
