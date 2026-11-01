@@ -3,8 +3,9 @@
 name: Daily job-posting refresh
 
 on:
-  schedule:
-    - cron: "30 2 * * *"   # 02:30 UTC = 08:00 IST
+  # Daily schedule switched off after the hackathon (2026-11-01). To turn it back on, restore:
+  #   schedule:
+  #     - cron: "30 2 * * *"   # 02:30 UTC = 08:00 IST
   workflow_dispatch:        # "Run workflow" button for a manual refresh
 
 permissions:
